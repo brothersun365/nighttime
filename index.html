@@ -3,7 +3,37 @@
 
 /* v2 — mission mode */
 .mission-nav{position:sticky;top:0;z-index:30;background:#fbfcf9f5;backdrop-filter:blur(14px);border-bottom:1px solid var(--edge);box-shadow:0 5px 18px #15362b14;padding:10px 15px}.mission-nav-inner{max-width:1050px;margin:auto}.mission-nav .nav-title{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#637f71;font-weight:800;margin-bottom:7px}.mission-nav .categories{display:flex;gap:7px;overflow-x:auto;padding:2px 1px 6px;scrollbar-width:thin}.category-btn{border:1px solid #dae7df;background:white;border-radius:100px;white-space:nowrap;padding:9px 12px;font-size:12px;font-weight:800;color:#466155}.category-btn.active{background:#254c47;color:#fff;border-color:#254c47}.category-btn .n{opacity:.72;font-size:10px;margin-left:4px}.mission-btn{border:1px solid #c8dacf;background:#e9f5ee;color:#246d5e;border-radius:10px;font-size:12px;font-weight:900;padding:9px 12px;white-space:nowrap;transition:transform .15s,background .15s}.mission-btn:active{transform:scale(.95)}.task{grid-template-columns:minmax(0,1fr) auto;align-items:center;padding:14px 17px;transition:opacity .24s,filter .24s,background .24s}.task.done{opacity:.4;filter:grayscale(.85);background:#f1f4f0}.task.done .tasktitle{text-decoration:line-through;color:#6a7e73}.task.done .desc{color:#84978a}.task.done .mission-btn{background:#e0e7e0;color:#77897f;border-color:#dde6dd}.taskmain{min-width:0}.tasktitle{font-size:14px}.taskmeta,.tasknote,.check,.note-trigger{display:none!important}.task .tag{display:inline-block;margin-top:6px}.panelhead{position:relative}.section-category{display:inline-flex;padding:3px 8px;background:#e3f1e8;color:#2f7160;border-radius:7px;font-size:11px;font-weight:800}.mission-celebrate{display:none;text-align:center;font-size:13px;color:#247463;font-weight:800;padding:9px}.mission-celebrate.show{display:block}.jump{display:none!important}.step{scroll-margin-top:130px}.minihelp{font-size:12px;color:#61786c;margin:0 16px 12px}.category-empty{text-align:center;color:#6f8177;padding:36px 10px}.special{margin-top:14px}@media(max-width:650px){.task{grid-template-columns:minmax(0,1fr) auto;padding:13px 11px;gap:8px}.mission-btn{padding:8px 9px;font-size:11px}.mission-nav{padding:8px 10px}.mission-nav .categories{gap:5px}.category-btn{padding:8px 10px;font-size:11px}.task .tag{grid-column:auto}.tasktitle{font-size:13px}.step{scroll-margin-top:120px}}@media print{.mission-nav,.mission-btn,.minihelp{display:none!important}.task.done{opacity:.65;filter:none}.task{display:block}}
-</style></head><body><header><div class="wrap"><div class="eyebrow">TOYU RYOKAN HOTEL · FRONT DESK</div><h1>오늘도 차근차근, 토유의 하루 ☘</h1><p>하나씩 톡! 체크하다 보면 어느새 마감 완료. 작은 확인이 좋은 숙박을 만듭니다.</p></div></header><div class="wrap"><section class="controls"><div class="inputs"><div><label class="small">근무 날짜</label><input id="date" type="date"></div><div><label class="small">날씨</label><input id="weather" type="text" placeholder="맑음 / 흐림 / 비"></div><div><label class="small">9시 출근자</label><input id="nineName" type="text" placeholder="이름"></div><div><label class="small">14시 출근자</label><input id="twoName" type="text" placeholder="이름"></div></div><div class="progressbar"><i id="bar"></i></div><div class="statusrow"><b id="progress">0 / 0 완료 · 0%</b><span id="saveStatus">이 브라우저에 날짜별로 자동 저장돼요</span></div><div class="actions"><button class="btn primary" id="copyReport">📋 카톡용 보고 복사</button><button class="btn" id="csv">엑셀용 CSV</button><button class="btn" id="json">JSON 백업</button><button class="btn" id="print">🖨 인쇄 / PDF</button><button class="btn danger" id="reset">오늘 체크 초기화</button></div></section><nav class="subtabs" id="filters"><button class="chip active" data-filter="all">전체 업무</button><button class="chip" data-filter="9출">9시 출근</button><button class="chip" data-filter="14출">14시 출근</button><button class="chip" data-filter="마감">마감·공통</button><button class="chip" data-filter="pending">미완료만</button><button class="chip" data-filter="periodic">정기 점검</button></nav><nav class="mission-nav" aria-label="업무 주제 목차"><div class="mission-nav-inner"><div class="nav-title"><span>🧭 업무 목차 · 주제별 바로가기</span><span id="categoryCount"></span></div><div class="categories" id="categories"></div></div></nav><p class="minihelp">✨ 미션을 완료하면 카드가 흐려집니다. 다시 누르면 미완료로 되돌릴 수 있어요.</p><main class="main" id="content"></main><div class="footer">TOYU FRONT OPERATIONS · 날짜별 저장 · 외부 서버 전송 없음 · 동일 브라우저에서만 기록 유지</div></div><div class="toast" id="toast"></div><script>
+
+/* v3: viewport-pinned table of contents */
+body{padding-top:94px}
+.mission-nav{position:fixed!important;top:0!important;left:0;right:0;width:100%;z-index:1000!important;background:#fcfdfbf8;box-shadow:0 5px 20px #183a3025}
+.mission-nav-inner{max-width:1050px;margin:0 auto}
+.mission-nav .nav-title{font-size:12px}
+.mission-nav .categories{scroll-behavior:smooth}
+.stock-modal{position:fixed;inset:0;z-index:1500;background:#0d2524a8;display:none;align-items:center;justify-content:center;padding:16px}
+.stock-modal.open{display:flex}
+.stock-dialog{background:#fff;border-radius:20px;width:min(740px,100%);max-height:min(93vh,950px);display:flex;flex-direction:column;box-shadow:0 24px 85px #001a1980;overflow:hidden}
+.stock-head{padding:19px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e4ebe5;gap:12px}
+.stock-head h2{font-size:19px;margin:0}.stock-head p{font-size:12px;margin:3px 0 0;color:#72827c}
+.stock-close{border:0;border-radius:9px;background:#edf3ee;font-size:23px;width:35px;height:35px;flex:none}
+.stock-scroll{padding:15px 20px;overflow-y:auto;overscroll-behavior:contain}
+.stock-date{display:flex;gap:10px;align-items:center;margin-bottom:15px;flex-wrap:wrap}.stock-date label{font-size:13px;font-weight:800}.stock-date input{width:160px}
+.stock-table{width:100%;border-collapse:collapse;font-size:13px}.stock-table th{font-size:11px;color:#71837b;background:#f2f7f3;text-align:left;padding:10px 7px}.stock-table td{border-bottom:1px solid #e9efea;padding:9px 7px}.stock-table td:first-child{font-weight:750;width:29%}
+.stock-table input{width:100%;min-width:0;text-align:center;border-radius:8px;padding:8px 3px;border:1px solid #d6e4da;font-weight:700;color:#234d41}
+.stock-table .pricecell{position:relative}.stock-table .pricecell span{display:none}.stock-hint{font-size:12px;color:#617b6d;margin:11px 0;line-height:1.6}
+.stock-footer{padding:14px 20px 19px;border-top:1px solid #e4ebe5;background:#fbfcfa;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.stock-footer .btn{padding:12px 17px}.stock-footer .btn.primary{font-size:14px}
+.stock-preview{background:#f5f9f6;border:1px solid #dae9dd;border-radius:12px;margin-top:12px;padding:12px;white-space:pre-wrap;font-size:12px;color:#355247}
+@media(max-width:650px){body{padding-top:88px}.stock-modal{padding:8px}.stock-dialog{max-height:96dvh}.stock-scroll{padding:12px}.stock-head{padding:13px}.stock-footer{padding:12px}.stock-table{font-size:11px}.stock-table th,.stock-table td{padding:7px 3px}.stock-table td:first-child{width:30%}.stock-table input{font-size:13px}.stock-head h2{font-size:16px}}
+@media print{body{padding-top:0}.stock-modal{display:none!important}}
+</style></head><body><header><div class="wrap"><div class="eyebrow">TOYU RYOKAN HOTEL · FRONT DESK</div><h1>오늘도 차근차근, 토유의 하루 ☘</h1><p>하나씩 톡! 체크하다 보면 어느새 마감 완료. 작은 확인이 좋은 숙박을 만듭니다.</p></div></header><div class="wrap"><section class="controls"><div class="inputs"><div><label class="small">근무 날짜</label><input id="date" type="date"></div><div><label class="small">날씨</label><input id="weather" type="text" placeholder="맑음 / 흐림 / 비"></div><div><label class="small">9시 출근자</label><input id="nineName" type="text" placeholder="이름"></div><div><label class="small">14시 출근자</label><input id="twoName" type="text" placeholder="이름"></div></div><div class="progressbar"><i id="bar"></i></div><div class="statusrow"><b id="progress">0 / 0 완료 · 0%</b><span id="saveStatus">이 브라우저에 날짜별로 자동 저장돼요</span></div><div class="actions"><button class="btn primary" id="openStock">🏨 금일 공실·가격 현황</button><button class="btn primary" id="copyReport">📋 카톡용 보고 복사</button><button class="btn" id="csv">엑셀용 CSV</button><button class="btn" id="json">JSON 백업</button><button class="btn" id="print">🖨 인쇄 / PDF</button><button class="btn danger" id="reset">오늘 체크 초기화</button></div></section><nav class="subtabs" id="filters"><button class="chip active" data-filter="all">전체 업무</button><button class="chip" data-filter="9출">9시 출근</button><button class="chip" data-filter="14출">14시 출근</button><button class="chip" data-filter="마감">마감·공통</button><button class="chip" data-filter="pending">미완료만</button><button class="chip" data-filter="periodic">정기 점검</button></nav><nav class="mission-nav" aria-label="업무 주제 목차"><div class="mission-nav-inner"><div class="nav-title"><span>🧭 업무 목차 · 주제별 바로가기</span><span id="categoryCount"></span></div><div class="categories" id="categories"></div></div></nav><p class="minihelp">✨ 미션을 완료하면 카드가 흐려집니다. 다시 누르면 미완료로 되돌릴 수 있어요.</p><main class="main" id="content"></main><div class="footer">TOYU FRONT OPERATIONS · 날짜별 저장 · 외부 서버 전송 없음 · 동일 브라우저에서만 기록 유지</div></div><div class="stock-modal" id="stockModal" role="dialog" aria-modal="true" aria-labelledby="stockTitle" aria-hidden="true">
+ <div class="stock-dialog"><div class="stock-head"><div><h2 id="stockTitle">🏨 금일 공실 재고 및 가격 현황</h2><p>수량과 가격을 입력하고 카카오톡 보고 문구를 복사하세요.</p></div><button type="button" class="stock-close" id="closeStock" aria-label="닫기">×</button></div>
+ <div class="stock-scroll"><div class="stock-date"><label for="stockDate">현황 날짜</label><input type="date" id="stockDate"></div>
+ <table class="stock-table"><thead><tr><th>객실 타입</th><th>공실 수량</th><th>룸온리 (만원)</th><th>조식 포함 (만원)</th></tr></thead><tbody id="stockRows"></tbody></table>
+ <p class="stock-hint">💡 가격은 <b>17.9</b>처럼 만원 단위로 입력하세요. <b>179000</b>원을 입력해도 자동으로 <b>17.9</b>로 바뀝니다. 공란으로 두면 카톡 문구에서 '미입력'으로 표시됩니다.</p>
+ <div class="stock-preview" id="stockPreview" aria-live="polite"></div></div>
+ <div class="stock-footer"><button class="btn primary" type="button" id="copyStock">📋 카카오톡 보고 복사</button><button class="btn" type="button" id="resetStock">기본 가격 복원</button><button class="btn" type="button" id="closeStockBottom">닫기</button></div>
+ </div></div><div class="toast" id="toast"></div><script>
 const TASKS=[];let id=0;function add(time,owner,title,desc='',kind='daily'){TASKS.push({id:'t'+(++id),time,owner,title,desc,kind})}function batch(time,owner,arr,kind='daily'){arr.forEach(a=>add(time,owner,...(Array.isArray(a)?a:[a]),kind))}
 // 시간순 기본 루틴
 batch('~12:00','9출',[
@@ -66,7 +96,66 @@ function progress(){let active=TASKS.filter(visible);let done=active.filter(comp
  $('#content').innerHTML=out||'<div class="empty">🎉 지금 볼 미션이 없어요!</div>';progress();
 }
 $('#content').addEventListener('click',e=>{const b=e.target.closest('[data-mission]');if(!b)return;const id=b.dataset.mission;state['c_'+id]=!state['c_'+id];save();const task=b.closest('.task');task.classList.toggle('done',!!state['c_'+id]);b.textContent=state['c_'+id]?'✓ 완수!':'○ 미션 완료';b.setAttribute('aria-pressed',String(!!state['c_'+id]));const panel=b.closest('.panel');const groupIds=[...panel.querySelectorAll('[data-task]')].map(e=>e.dataset.task);panel.querySelector('.count').textContent=groupIds.filter(i=>state['c_'+i]).length+'/'+groupIds.length+' 완료';categoryNav();if(filter==='pending')render();if(state['c_'+id]&&groupIds.every(i=>state['c_'+i]))toast('🎉 이 시간대 미션을 모두 완수했어요!');else if(state['c_'+id])toast('✨ 미션 완수!')});
-$('#categories').addEventListener('click',e=>{let b=e.target.closest('[data-category]');if(!b)return;category=b.dataset.category;if(category==='periodic'){filter='periodic'}else if(filter==='periodic'){filter='all'}document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset.filter===filter));render();window.scrollTo({top:document.querySelector('.mission-nav').getBoundingClientRect().top+window.scrollY-5,behavior:'smooth'})});
+$('#categories').addEventListener('click',e=>{let b=e.target.closest('[data-category]');if(!b)return;category=b.dataset.category;if(category==='periodic'){filter='periodic'}else if(filter==='periodic'){filter='all'}document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x.dataset.filter===filter));render();window.scrollTo({top:0,behavior:'smooth'})});
 $('#filters').addEventListener('click',e=>{let b=e.target.closest('[data-filter]');if(!b)return;filter=b.dataset.filter;if(filter==='periodic')category='periodic';else if(category==='periodic')category='all';document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x===b));render()});dateEl.addEventListener('change',load);for(const n of ['weather','nineName','twoName'])$('#'+n).addEventListener('input',save);
 function download(name,contents,mime){const blob=new Blob([contents],{type:mime});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}function csvEscape(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}$('#csv').onclick=()=>{let rows=[['날짜','날씨','시간','담당','업무','상세내용','완료','구분'],...TASKS.map(t=>[dateEl.value,state.weather||'',t.time,t.owner,t.title,t.desc,complete(t)?'완료':'미완료',t.kind])];download(`TOYU_프런트업무_${dateEl.value}.csv`,'\ufeff'+rows.map(a=>a.map(csvEscape).join(',')).join('\r\n'),'text/csv;charset=utf-8');toast('CSV 파일을 저장했어요')};$('#json').onclick=()=>{download(`TOYU_프런트업무_${dateEl.value}.json`,JSON.stringify({date:dateEl.value,...state,tasks:TASKS},null,2),'application/json');toast('백업 파일을 저장했어요')};$('#print').onclick=()=>window.print();$('#reset').onclick=()=>{if(!confirm(`${dateEl.value}의 모든 미션 완료 기록을 초기화할까요?`))return;state={};save();load();toast('이 날짜 기록을 초기화했어요')};$('#copyReport').onclick=async()=>{const all=TASKS.filter(t=>t.kind==='daily'),completed=all.filter(complete),pending=all.filter(t=>!complete(t));let lines=[`[TOYU 프런트팀 업무 현황]`,`${dateEl.value} / 날씨: ${state.weather||'미입력'}`,`9시 출근: ${state.nineName||'-'} / 14시 출근: ${state.twoName||'-'}`,`미션 완료 ${completed.length}/${all.length}건`, '', '■ 완료 업무',...completed.map(t=>`✓ ${t.time} ${t.title}`),'','■ 미완료 업무',...pending.map(t=>`□ ${t.time} ${t.title}`)];let output=lines.join('\n');try{await navigator.clipboard.writeText(output);toast('카톡용 업무 현황을 복사했어요')}catch{const ta=document.createElement('textarea');ta.value=output;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('보고 내용을 복사했어요')}};let tm;function toast(s){let t=$('#toast');t.textContent=s;t.style.display='block';clearTimeout(tm);tm=setTimeout(()=>t.style.display='none',2300)}load();
+
+// Stock & pricing panel: persistent day-scoped values, no backend required.
+const STOCK_TYPES=[
+ {id:'deluxe',name:'디럭스',n:'',room:'18.9',meal:'25.5'},
+ {id:'premier',name:'프리미어',n:'',room:'19.9',meal:'28.5'},
+ {id:'king',name:'프리미어 킹',n:'1',room:'20.9',meal:'30.5'},
+ {id:'triple',name:'프리미어 트리플',n:'1',room:'22.9',meal:'32.5'},
+ {id:'family',name:'패밀리',n:'1',room:'21.9',meal:'30.5'},
+ {id:'suite',name:'패밀리 스위트',n:'1',room:'21.9',meal:'32.5'},
+ {id:'standard',name:'스탠다드(스디)',n:'1',room:'17.9',meal:''}
+];
+const stockModal=document.getElementById('stockModal');
+const stockDate=document.getElementById('stockDate');
+const stockRows=document.getElementById('stockRows');
+let stockData={};
+function stockKey(){return 'toyu_stock_v3_'+stockDate.value}
+function normalizePrice(value){
+ let v=String(value??'').replace(/[,\s원₩]/g,'').trim();if(!v)return '';
+ let x=Number(v);if(!Number.isFinite(x)||x<0)return '';
+ // A full KRW amount (179000) -> amount in 10,000 KRW units (17.9).
+ if(x>=1000)x=x/10000;
+ return String(Number(x.toFixed(3)));
+}
+function stockDefaults(){return Object.fromEntries(STOCK_TYPES.map(t=>[t.id,{n:t.n,room:t.room,meal:t.meal}]))}
+function loadStock(){
+ try{stockData=JSON.parse(localStorage.getItem(stockKey()))||stockDefaults()}catch{stockData=stockDefaults()}
+ for(const t of STOCK_TYPES)if(!stockData[t.id])stockData[t.id]={n:t.n,room:t.room,meal:t.meal};
+ renderStock();
+}
+function saveStock(){try{localStorage.setItem(stockKey(),JSON.stringify(stockData))}catch{}updateStockPreview()}
+function renderStock(){
+ stockRows.innerHTML=STOCK_TYPES.map(t=>{const v=stockData[t.id];return `<tr><td>${t.name}</td><td><input aria-label="${t.name} 공실 수량" type="number" min="0" step="1" inputmode="numeric" data-stock="${t.id}" data-field="n" value="${escapeHTML(v.n)}" placeholder="개수"></td><td><input aria-label="${t.name} 룸온리 가격" type="text" inputmode="decimal" data-stock="${t.id}" data-field="room" value="${escapeHTML(v.room)}" placeholder="예: 17.9"></td><td>${t.id==='standard'?'<span style="color:#a0aaa4">—</span>':`<input aria-label="${t.name} 조식 포함 가격" type="text" inputmode="decimal" data-stock="${t.id}" data-field="meal" value="${escapeHTML(v.meal)}" placeholder="예: 25.5">`}</td></tr>`}).join('');
+ updateStockPreview();
+}
+function makeStockReport(){
+ const date=stockDate.value||dateEl.value;const bits=date.split('-');const label=bits.length===3?`${Number(bits[1])}/${Number(bits[2])}`:date;
+ let text=`[금일 공실 재고 및 가격 현황 (${label})]\n\n`;
+ for(const t of STOCK_TYPES){const v=stockData[t.id]||{};const n=v.n!==''&&v.n!=null?`${v.n}개`:'수량 미입력';const room=v.room!==''&&v.room!=null?normalizePrice(v.room):'미입력';const meal=v.meal!==''&&v.meal!=null?normalizePrice(v.meal):'미입력';
+ if(t.id==='standard')text+=`스디 ${n} 열려있음\n- 룸온리 ${room}\n\n`;
+ else text+=`${t.name} ${n}\n- 룸온리 ${room}\n- 조포 ${meal}\n\n`;
+ }
+ return text.trim();
+}
+function updateStockPreview(){document.getElementById('stockPreview').textContent=makeStockReport()}
+function openStock(){stockDate.value=dateEl.value;loadStock();stockModal.classList.add('open');stockModal.setAttribute('aria-hidden','false');document.getElementById('closeStock').focus()}
+function closeStock(){stockModal.classList.remove('open');stockModal.setAttribute('aria-hidden','true');document.getElementById('openStock').focus()}
+document.getElementById('openStock').addEventListener('click',openStock);
+document.getElementById('closeStock').addEventListener('click',closeStock);
+document.getElementById('closeStockBottom').addEventListener('click',closeStock);
+stockModal.addEventListener('click',e=>{if(e.target===stockModal)closeStock()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&stockModal.classList.contains('open'))closeStock()});
+stockDate.addEventListener('change',loadStock);
+stockRows.addEventListener('input',e=>{let el=e.target;if(!el.matches('[data-stock]'))return;stockData[el.dataset.stock][el.dataset.field]=el.value;saveStock()});
+stockRows.addEventListener('change',e=>{let el=e.target;if(!el.matches('[data-stock]'))return;const field=el.dataset.field;if(field==='room'||field==='meal'){el.value=normalizePrice(el.value);stockData[el.dataset.stock][field]=el.value}else{if(el.value&&Number(el.value)<0)el.value='0';stockData[el.dataset.stock][field]=el.value}saveStock()});
+document.getElementById('resetStock').addEventListener('click',()=>{if(!confirm('선택한 날짜의 수량과 가격을 기본값으로 되돌릴까요?'))return;stockData=stockDefaults();saveStock();renderStock();toast('기본값을 적용했어요')});
+document.getElementById('copyStock').addEventListener('click',async()=>{
+ const txt=makeStockReport();try{await navigator.clipboard.writeText(txt);toast('🏨 공실 가격 현황을 복사했어요')}catch{
+ const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.left='-10000px';document.body.appendChild(ta);ta.select();let ok=document.execCommand('copy');ta.remove();if(ok)toast('🏨 공실 가격 현황을 복사했어요');else{const p=document.getElementById('stockPreview');const range=document.createRange();range.selectNodeContents(p);window.getSelection().removeAllRanges();window.getSelection().addRange(range);toast('복사가 제한되어 아래 미리보기 내용을 선택했어요')}}
+});
 </script></body></html>
